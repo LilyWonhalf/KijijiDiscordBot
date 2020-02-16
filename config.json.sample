@@ -1,0 +1,13 @@
+{
+    "token": "",
+    "prefix": "!",
+    "guild": "",
+    "admin": "",
+    "channels": {
+        "apartments": "",
+        "pins": ""
+    },
+    "roles": {
+        "bestiole": ""
+    }
+}
