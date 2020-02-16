@@ -2,6 +2,7 @@ const fs = require('fs');
 const Logger = require('@elian-wonhalf/pretty-logger');
 const Discord = require('discord.js');
 const kijiji = require('kijiji-scraper');
+const Config = require('../config.json');
 const Guild = require('./guild');
 let data = require('../data.json');
 
@@ -18,6 +19,14 @@ const params = {
 
 const updateData = () => {
     fs.writeFileSync('data.json', JSON.stringify(data));
+};
+
+const getLocationURL = (location) => {
+    const baseURL = 'https://maps.googleapis.com/maps/api/staticmap?key=' + Config.googleAPIToken;
+    const baseParams = '&zoom=11&size=300x300&maptype=roadmap';
+    const locationString = location.latitude + ',' + location.longitude;
+
+    return baseURL + baseParams + '&center=' + locationString + '&markers=color:red%7Clabel:C%7C' + locationString;
 };
 
 /**
@@ -108,14 +117,29 @@ const search = () => {
                 && !data.blacklisted.includes(ad.title)
                 && ad.attributes.price < 700
                 && ad.attributes.price > 0
-                && !ad.title.toLowerCase().includes('recherch');
+                && !ad.title.toLowerCase().includes('recherch')
+                && !ad.title.toLowerCase().includes('wanted')
+                && !ad.title.toLowerCase().includes('chambre')
+                && !ad.title.toLowerCase().includes('room')
+                && !ad.title.toLowerCase().includes('sous louer')
+                && !ad.title.toLowerCase().includes('sublet')
+                && !ad.title.toLowerCase().includes('échange')
+                && !ad.title.toLowerCase().includes('exchange')
+                && !ad.title.toLowerCase().includes('swap')
+                && !ad.title.toLowerCase().includes('fille')
+                && !ad.title.toLowerCase().includes('girl')
+            ;
         }).reverse();
 
         Logger.info('Found ' + ads.length + ' new ads');
 
         for (let i = 0; i < ads.length; i++) {
             const embed = adToEmbed(ads[i]);
-            const message = await Guild.apartmentsChannel.send(ads[i].url, {embed});
+            const mapURL = getLocationURL(ads[i].attributes.location);
+            const message = await Guild.apartmentsChannel.send(
+                ads[i].url,
+                {embed, file: {attachment: mapURL, name: 'map.png'}}
+            );
 
             await message.react(Guild.yesEmoji);
             await message.react(Guild.noEmoji);
