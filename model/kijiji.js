@@ -67,6 +67,10 @@ const adToEmbed = (ad) => {
         ad.description = ad.description.substr(0, 2045) + '...';
     }
 
+    if (ad.description.length < 1) {
+        ad.description = '[No description]';
+    }
+
     embed.setTitle(ad.title);
     embed.setDescription(ad.description);
     embed.setTimestamp(ad.date);
@@ -128,6 +132,8 @@ const search = () => {
                 && !ad.title.toLowerCase().includes('swap')
                 && !ad.title.toLowerCase().includes('fille')
                 && !ad.title.toLowerCase().includes('girl')
+                && !ad.title.toLowerCase().includes('colocation')
+                && !ad.title.toLowerCase().includes('looking for')
             ;
         }).reverse();
 
