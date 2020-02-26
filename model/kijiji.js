@@ -162,7 +162,8 @@ const search = () => {
  * @param {MessageReaction} reaction
  */
 const approve = async (reaction) => {
-    await Guild.pinsChannel.send(reaction.message.embeds[0]);
+    const embed = new Discord.RichEmbed(reaction.message.embeds[0]);
+    await Guild.pinsChannel.send(reaction.message.content, embed);
 };
 
 /**
