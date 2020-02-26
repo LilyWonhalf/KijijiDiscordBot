@@ -154,7 +154,7 @@ const search = () => {
         }
 
         updateData();
-        Guild.apartmentsChannel.stopTyping();
+        Guild.apartmentsChannel.stopTyping(true);
     }).catch(console.error);
 };
 
